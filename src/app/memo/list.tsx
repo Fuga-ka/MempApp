@@ -19,8 +19,7 @@ const List = (): JSX.Element => {
     navigation.setOptions({
       headerRight: () => {
         return <LogOutButton />
-      },
-      headerBackVisible: false
+      }
     })
   }, [])
 

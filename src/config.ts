@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app"
 // @ts-expect-error: firebase/auth/react-native is not recognized by TS, but it exists at runtime
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth/react-native'
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth'
 import { getFirestore } from "firebase/firestore"
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage"
 
