@@ -1,24 +1,46 @@
 import {
-  View, TextInput, KeyboardAvoidingView, StyleSheet
+  View, TextInput, StyleSheet
 } from 'react-native'
 import { JSX } from "react"
 import { router } from 'expo-router'
+import { collection, addDoc, Timestamp } from 'firebase/firestore'
+import { useState } from 'react'
 
+import KeyboardAvoidingView from '../../components/KeyboardAvoidingView'
 import CircleButton from "../../components/CircleButton"
 import Icon from '../../components/Icon'
+import { db, auth } from '../../config'
 
-const handlePress = (): void => {
-  // 会員登録
-  router.back()
+const handlePress = async (bodyText: string): Promise<void> => {
+  // メモの作成
+  if (auth.currentUser === null) { return }
+  const ref = collection(db, `users/${auth.currentUser.uid}/memos`)
+  try {
+    const docRef = await addDoc(ref, {
+      bodyText,
+      updatedAt: Timestamp.fromDate(new Date())
+    })
+    console.log('success', docRef.id)
+    router.back()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const Create = (): JSX.Element => {
+  const [bodyText, setBodyText] = useState('')
   return (
-    <KeyboardAvoidingView behavior='height' style={styles.container}>
+    <KeyboardAvoidingView style={styles.container}>
       <View style={styles.inputContainer}>
-        <TextInput multiline style={styles.input} value={'買い物\nリスト'} />
+        <TextInput
+          multiline
+          style={styles.input}
+          value={bodyText}
+          onChangeText={(text) => { setBodyText(text) }}
+          autoFocus
+        />
       </View>
-      <CircleButton onPress={handlePress}>
+      <CircleButton onPress={() => { handlePress(bodyText) }}>
         <Icon name='check' size={40} color="#ffffff" />
       </CircleButton>
     </KeyboardAvoidingView>
